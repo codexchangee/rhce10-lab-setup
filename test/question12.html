@@ -1,22 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Task 11 - Generate /etc/myhosts from Template</title>
-<script>/* timer */ (function(){ const DURATION_SECONDS=90*60; const STORAGE_KEY="examEndTime_90m_v2"; function startTimer(durationSeconds, display){ let endTime=parseInt(localStorage.getItem(STORAGE_KEY)||"0",10); const now=Date.now(); if(!endTime||endTime<=now||endTime-now>durationSeconds*1000+5000){ endTime=now+durationSeconds*1000; localStorage.setItem(STORAGE_KEY,String(endTime)); } function updateTimer(){ const remainingMs=Math.max(0,endTime-Date.now()); const remaining=Math.floor(remainingMs/1000); const hours=Math.floor(remaining/3600); const minutes=Math.floor((remaining%3600)/60); display.textContent=hours+":"+(minutes<10?"0":"")+minutes; if(remaining<=15*60) display.classList.add("red"); else display.classList.remove("red"); if(remaining>0) setTimeout(updateTimer,1000); else display.textContent="0:00"; } updateTimer(); } window.onload=function(){ const display=document.querySelector("#countdown"); if(display) startTimer(DURATION_SECONDS,display); }; })();</script>
-  <style>body{margin:0;font-family:Arial, sans-serif;background-color:#ffffcc;display:flex}.sidebar{width:220px;background-color:#ffffcc;border-right:2px solid #ccc;text-align:center;padding:20px}.content{flex:1;padding:20px}.timer{font-weight:bold;font-size:18px;margin-top:20px}.timer.red{color:red}</style>
+<meta charset="UTF-8" />
+<title>RHCE RHEL 10 - Task 12</title>
+<script>(function () {
+  const DURATION_SECONDS = 90 * 60;
+  const STORAGE_KEY = "examEndTime_90m_v2";
+
+  function startTimer(durationSeconds, display) {
+    let endTime = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+    const now = Date.now();
+
+    if (
+      !endTime ||
+      endTime <= now ||
+      endTime - now > durationSeconds * 1000 + 5000
+    ) {
+      endTime = now + durationSeconds * 1000;
+      localStorage.setItem(STORAGE_KEY, String(endTime));
+    }
+
+    function updateTimer() {
+      const remainingMs = Math.max(0, endTime - Date.now());
+      const remaining = Math.floor(remainingMs / 1000);
+      const hours = Math.floor(remaining / 3600);
+      const minutes = Math.floor((remaining % 3600) / 60);
+
+      display.textContent =
+        hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+
+      if (remaining <= 15 * 60) {
+        display.classList.add("red");
+      } else {
+        display.classList.remove("red");
+      }
+
+      if (remaining > 0) {
+        setTimeout(updateTimer, 1000);
+      } else {
+        display.textContent = "0:00";
+      }
+    }
+
+    updateTimer();
+  }
+
+  window.onload = function () {
+    const display = document.querySelector("#countdown");
+    if (display) startTimer(DURATION_SECONDS, display);
+  };
+})();</script>
+<style>
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: white;
+}
+
+.top-header {
+  background-color: black;
+  color: white;
+  padding: 18px 25px;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 5px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left { color: white; }
+.header-right { color: white; }
+
+.main-container {
+  display: flex;
+  min-height: calc(100vh - 80px);
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #2d2d2d;
+  color: white;
+  border-right: 2px solid #444;
+  padding: 25px 15px;
+}
+
+.exam-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.timer {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.timer.red { color: red; }
+
+.language-selector {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.language-selector select {
+  width: 170px;
+  padding: 10px 15px;
+  border-radius: 30px;
+  border: 2px solid #999;
+  background-color: #f2f2f2;
+  color: #333;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.content {
+  flex: 1;
+  padding: 10px 20px;
+  background: white;
+  overflow-y: auto;
+  height: calc(100vh - 80px);
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.task-list {
+  margin-bottom: 35px;
+}
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 10px;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.task a {
+  color: #0044cc;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.task a:hover { text-decoration: underline; }
+
+.status-options {
+  display: flex;
+  gap: 25px;
+}
+
+.status-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #0066cc;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+}
+
+input[type="radio"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: #0066cc;
+  border-radius: 50%;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 12px;
+  margin-top: 25px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.action-btn {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.action-btn:hover { background-color: #0052a3; }
+
+html { scroll-behavior: smooth; }
+
+  
+.content li {
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.content li > input[type="radio"] {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+.question-option-text {
+  flex: 1;
+  line-height: 1.45;
+}
+.content ol,
+.content ul {
+  padding-left: 0;
+}
+.content ol ol,
+.content ul ul {
+  padding-left: 20px;
+}
+
+</style>
 </head>
 <body>
+<div class="top-header">
+  <div class="header-left">RedHat Certified Engineer Exam</div>
+  <div class="header-right">RHCE RHEL 10</div>
+</div>
+<div class="main-container">
   <div class="sidebar">
-    <div class="exam-title">Red Hat<br/>Test Exam</div>
-    <div class="timer">Time remaining: <span id="countdown">1:30</span></div>
-    <a href="#" class="lang-link">Select Language</a>
-    <p>Task 11 of 17</p>
+    <div class="exam-title">RHCE<br>Test Exam</div>
+    <div class="timer">Time Remaining<br><span id="countdown">1:30</span></div>
+    <div class="language-selector">
+      <select>
+        <option selected>Select Language</option>
+        <option>English</option>
+        <option>Spanish</option>
+        <option>French</option>
+        <option>Japanese</option>
+      </select>
+      <p>Task 12 of 18</p>
+    </div>
   </div>
-
   <div class="content">
-    <h2>Download myhosts.j2 and create /etc/myhosts</h2>
-    <p>Download <code>myhosts.j2</code> (contains base entries) and use it to collect all node information (IP, FQDN, hostname) such that /etc/myhosts finally contains lines similar to:</p>
+    <h2>Download hosts.j2 and create /etc/myhosts</h2>
+    <p>Download <a href="http://localhost/files/hosts.j2"><code>http://localhost/files/hosts.j2</code></a> (contains base entries) and use it to collect all node information (IP, FQDN, hostname) such that /etc/myhosts finally contains lines similar to:</p>
     <pre>
 127.0.0.1 localhost.localdomain localhost
 192.168.0.1 localhost.localdomain localhost
@@ -27,10 +291,24 @@
 172.25.250.13 node4.lab.example.com node4
 172.25.250.14 node5.lab.example.com node5
     </pre>
-    <p>Playbook name: <code>hosts.yml</code>, run in <code>dev</code> group.</p>
+    <p>Playbook name: <a href="http://localhost/files/host.yml"><code>host.yml</code></a>, run in <code>dev</code> group.</p>
 
-    <center><button onclick="history.back()">Back</button></center>
-    <hr><center><button>Provide feedback on this item</button></center>
+  <input type="radio"> <span class="question-option-text">commit and push hosts.j2 inside Git repository</code>  
+
+    <hr>
+    <div class="button-group">
+      <button class="action-btn" onclick="history.back()">Back</button>
+      <button class="action-btn">Provide feedback on this item</button>
+    </div>
   </div>
+</div>
+<script>const content = document.querySelector('.content');
+window.addEventListener('load', () => {
+  const savedScroll = localStorage.getItem(window.location.pathname + '_scroll');
+  if (savedScroll && content) content.scrollTop = parseInt(savedScroll);
+});
+window.addEventListener('beforeunload', () => {
+  if (content) localStorage.setItem(window.location.pathname + '_scroll', content.scrollTop);
+});</script>
 </body>
 </html>
