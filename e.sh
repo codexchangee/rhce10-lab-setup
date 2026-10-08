@@ -479,6 +479,9 @@ xdg-open http://localhost/files 2>/dev/null || true
 
 xdg-open http://localhost/files/rhel-system-roles/ 2>/dev/null || true
 
+cd /home/student/ansible
+
+ansible-galaxy collection install ansible.posix
 
 ###########################################
 # DONE
