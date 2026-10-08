@@ -178,26 +178,7 @@ vgs research
 EOF
 
 
-# -----------------------------------------
-# NODE3 - NO RESEARCH VG
-# -----------------------------------------
 
-echo "Preparing node3 without research VG..."
-
-sshpass -p "$ROOT_PASSWORD" ssh \
-    -o StrictHostKeyChecking=no \
-    root@172.25.250.220 'bash -s' <<'EOF'
-
-set -e
-
-# Leave /dev/sdb without partitions/PV/VG
-wipefs -a /dev/sdb 2>/dev/null || true
-parted -s /dev/sdb mklabel gpt
-partprobe /dev/sdb
-
-echo "node3 has no research VG."
-
-EOF
 
 
 # -----------------------------------------
