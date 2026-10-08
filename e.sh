@@ -45,6 +45,21 @@ echo "======================================="
 
 ROOT_PASSWORD="redhat"
 
+###########################################
+# INSTALL REQUIRED WORKSTATION PACKAGES
+###########################################
+
+echo "Installing required packages..."
+
+dnf install -y \
+    sshpass \
+    httpd \
+    git \
+    curl \
+    tar \
+    policycoreutils-python-utils
+
+
 # -----------------------------------------
 # CLEAN / RESET /dev/sdb ON ALL NODES
 # -----------------------------------------
@@ -253,21 +268,6 @@ echo "node3 -> VG not present"
 echo "node4 -> 800M"
 echo "node5 -> VG not present"
 echo
-
-
-###########################################
-# INSTALL REQUIRED WORKSTATION PACKAGES
-###########################################
-
-echo "Installing required packages..."
-
-dnf install -y \
-    sshpass \
-    httpd \
-    git \
-    curl \
-    tar \
-    policycoreutils-python-utils
 
 
 ###########################################
