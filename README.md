@@ -1,50 +1,21 @@
-🧪 RHCE Practice Lab Auto Setup (One-Command Deployment)
+# 🧪 RHCE RHEL 10 Practice Lab Auto Setup
 
-This repository provides a fully automated, one-command setup for an RHCE (Red Hat Certified Engineer) practice lab.
-It automatically configures the lab environment, installs required services, deploys all RHCE practice papers, and prepares the system for training and evaluation — with zero manual configuration.
+This repository provides a fully automated setup for an *RHCE RHEL 10 practice lab*.
 
-🚀 One-Line Installation Command
+The setup script configures the required lab nodes, installs the required packages and Ansible collection, creates the `admin` user, deploys the RHCE practice papers and lab files, configures Apache, and prepares the local Git environment.
 
-Run the following single command on your RHCE lab machine:
+The complete lab can be deployed using a *single command*.
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-bash -c 'curl -L https://raw.githubusercontent.com/codexchangee/rhce-practcie-lab-setup/main/b.sh | sudo bash'
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
 
-✅ What This Script Does Automatically
+## 🚀 One-Line Installation
 
-Configures /etc/hosts with all RHCE lab nodes
-Installs ansible.posix collection
-Creates admin user on all lab machines using SSH
-Installs and enables Apache (httpd)
-Downloads all RHCE practice files directly from this GitHub repository
-Deploys all content to:
-/var/www/html/files
-Sets correct Apache ownership and permissions
-Restarts Apache automatically
-Opens RHCE practice papers in the browser after setup
+Run the following command on the RHEL 10 workstation:
 
-🌐 How to Access the RHCE Practice Papers
+After entering the script enter the student password : student 
 
-After the script finishes, open your browser and visit:
-http://localhost/files
+*Remember run this scipt with student user only*
 
+```bash
+curl -L https://raw.githubusercontent.com/codexchangee/rhce10-lab-setup/main/e.sh | sudo bash
 
-All RHCE practice content will be available there.
-
-📂 Repository Structure
-rhce-practcie-lab-setup/
-├── a.sh        # Main RHCE auto-setup script
-└── files/      # All RHCE practice papers, HTML files, images & resources
-
-
-
-🔐 Default Lab Credentials
-Username: admin
-Password: root
-
-
-
-✅ Fully Automated | One Command | Zero Manual Setup
-
-This project is designed to eliminate manual lab setup and allow users to deploy a complete RHCE practice environment instantly using a single command.
