@@ -7,7 +7,7 @@
 if [ "$EUID" -ne 0 ]; then
     echo "ERROR: This script must be run with sudo."
     echo "Run:"
-    echo "curl -L https://raw.githubusercontent.com/codexchangee/rhce-practcie-lab-setup/main/e.sh | sudo bash"
+    echo echo "curl -L https://raw.githubusercontent.com/codexchangee/rhce10-lab-setup/main/e.sh | sudo bash"
     exit 1
 fi
 
@@ -134,7 +134,7 @@ systemctl enable --now httpd
 ###########################################
 
 GITHUB_USER="codexchangee"
-GITHUB_REPO="rhce-practcie-lab-setup"
+GITHUB_REPO="rhce10-lab-setup"
 GITHUB_BRANCH="main"
 
 URL="https://github.com/${GITHUB_USER}/${GITHUB_REPO}/archive/refs/heads/${GITHUB_BRANCH}.tar.gz"
