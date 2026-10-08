@@ -60,196 +60,98 @@ dnf install -y \
     policycoreutils-python-utils
 
 
-# -----------------------------------------
-# CLEAN / RESET /dev/sdb ON ALL NODES
-# -----------------------------------------
+###########################################
+# PREPARE LVM EXAM ENVIRONMENT
+###########################################
 
-for IP in \
-    172.25.250.10 \
-    172.25.250.11 \
-    172.25.250.220 \
-    172.25.250.12 \
-    172.25.250.13
-do
+echo "======================================="
+echo "CREATING LVM EXAM ENVIRONMENT"
+echo "======================================="
 
-    echo "Cleaning LVM environment on $IP..."
-
-    sshpass -p "$ROOT_PASSWORD" ssh \
-        -o StrictHostKeyChecking=no \
-        root@"$IP" 'bash -s' <<'EOF'
-
-set -e
-
-DISK=/dev/sdb
-
-# Safety check - never touch the root disk
-ROOT_SOURCE=$(findmnt -n -o SOURCE / || true)
-
-case "$ROOT_SOURCE" in
-    /dev/sdb|/dev/sdb[0-9]*)
-        echo "ERROR: /dev/sdb is the root disk!"
-        exit 1
-        ;;
-esac
-
-# Remove existing LV
-lvremove -fy /dev/research/data 2>/dev/null || true
-
-# Remove existing VG
-vgremove -fy research 2>/dev/null || true
-
-# Remove PV metadata
-for P in /dev/sdb1 /dev/sdb2 /dev/sdb3; do
-    if [ -b "$P" ]; then
-        pvremove -ff -y "$P" 2>/dev/null || true
-    fi
-done
-
-pvremove -ff -y "$DISK" 2>/dev/null || true
-
-# Remove filesystem/partition signatures
-wipefs -a "$DISK" 2>/dev/null || true
-
-# Reset partition table
-parted -s "$DISK" mklabel gpt
-
-partprobe "$DISK"
-
-sleep 2
-
-EOF
-
-done
-
-
-# -----------------------------------------
-# NODE1 - 2GB RESEARCH VG
-# -----------------------------------------
-
-echo "Preparing node1..."
+# NODE1 - 2GB
+echo "Creating LVM on node1..."
 
 sshpass -p "$ROOT_PASSWORD" ssh \
     -o StrictHostKeyChecking=no \
     root@172.25.250.10 'bash -s' <<'EOF'
 
-set -e
-
 parted -s /dev/sdb mklabel gpt
 parted -s /dev/sdb mkpart primary 1MiB 2049MiB
-
 partprobe /dev/sdb
 sleep 2
 
 pvcreate /dev/sdb1
 vgcreate research /dev/sdb1
 
-echo "node1 LVM:"
+echo "node1:"
 pvs
-vgs research
+vgs
 
 EOF
 
 
-# -----------------------------------------
-# NODE2 - 2GB RESEARCH VG
-# -----------------------------------------
-
-echo "Preparing node2..."
+# NODE2 - 2GB
+echo "Creating LVM on node2..."
 
 sshpass -p "$ROOT_PASSWORD" ssh \
     -o StrictHostKeyChecking=no \
     root@172.25.250.11 'bash -s' <<'EOF'
 
-set -e
-
 parted -s /dev/sdb mklabel gpt
 parted -s /dev/sdb mkpart primary 1MiB 2049MiB
-
 partprobe /dev/sdb
 sleep 2
 
 pvcreate /dev/sdb1
 vgcreate research /dev/sdb1
 
-echo "node2 LVM:"
+echo "node2:"
 pvs
-vgs research
+vgs
 
 EOF
 
 
+# NODE3 - NO LVM
+echo "node3: No research VG"
 
 
-
-# -----------------------------------------
-# NODE4 - 1GB RESEARCH VG
-# -----------------------------------------
-
-echo "Preparing node4..."
+# NODE4 - 1GB
+echo "Creating LVM on node4..."
 
 sshpass -p "$ROOT_PASSWORD" ssh \
     -o StrictHostKeyChecking=no \
     root@172.25.250.12 'bash -s' <<'EOF'
 
-set -e
-
 parted -s /dev/sdb mklabel gpt
 parted -s /dev/sdb mkpart primary 1MiB 1025MiB
-
 partprobe /dev/sdb
 sleep 2
 
 pvcreate /dev/sdb1
 vgcreate research /dev/sdb1
 
-echo "node4 LVM:"
+echo "node4:"
 pvs
-vgs research
+vgs
 
 EOF
 
 
-# -----------------------------------------
-# NODE5 - NO RESEARCH VG
-# -----------------------------------------
-
-echo "Preparing node5 without research VG..."
-
-sshpass -p "$ROOT_PASSWORD" ssh \
-    -o StrictHostKeyChecking=no \
-    root@172.25.250.13 'bash -s' <<'EOF'
-
-set -e
-
-# Leave /dev/sdb without partitions/PV/VG
-wipefs -a /dev/sdb 2>/dev/null || true
-parted -s /dev/sdb mklabel gpt
-partprobe /dev/sdb
-
-echo "node5 has no research VG."
-
-EOF
-
+# NODE5 - NO LVM
+echo "node5: No research VG"
 
 echo
 echo "======================================="
-echo "LVM EXAM ENVIRONMENT READY"
+echo "LVM EXAM ENVIRONMENT CREATED"
 echo "======================================="
 echo
-echo "node1 : research VG on 2GB"
-echo "node2 : research VG on 2GB"
-echo "node3 : no research VG"
-echo "node4 : research VG on 1GB"
-echo "node5 : no research VG"
+echo "node1 -> research VG, 2GB"
+echo "node2 -> research VG, 2GB"
+echo "node3 -> no research VG"
+echo "node4 -> research VG, 1GB"
+echo "node5 -> no research VG"
 echo
-echo "Expected LV test:"
-echo "node1 -> 1500M"
-echo "node2 -> 1500M"
-echo "node3 -> VG not present"
-echo "node4 -> 800M"
-echo "node5 -> VG not present"
-echo
-
 
 ###########################################
 # CONFIGURE /etc/hosts
